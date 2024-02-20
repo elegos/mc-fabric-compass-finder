@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "gf-compass-finder",
+	"version": "${version}",
+	"name": "Compass Finder",
+	"description": "Find any block with your compass!",
+	"authors": [
+		"Giacomo 'Mr. Wolf' Furlan"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/gf-compass-finder/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"name.giacomofurlan.compassfinder.CompassFinder"
+		],
+		"client": [
+			"name.giacomofurlan.compassfinder.CompassFinderClient"
+		],
+		"fabric-datagen": [
+			"name.giacomofurlan.compassfinder.CompassFinderDataGenerator"
+		]
+	},
+	"mixins": [
+		"gf-compass-finder.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.6",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*",
+		"fabric-key-binding-api-v1": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
