@@ -24,7 +24,7 @@ public class InventoryHelper {
                 continue;
             }
 
-            CompassFinder.setCompassNbt(stack, nearestPos);
+            CompassFinder.setCompassNbt(stack, nearestPos, CompassFinder.getNeedleOption().translationKey);
         }
     }
 }

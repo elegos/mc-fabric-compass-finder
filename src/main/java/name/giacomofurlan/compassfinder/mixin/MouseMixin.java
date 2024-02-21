@@ -11,7 +11,9 @@ import name.giacomofurlan.compassfinder.CompassFinder;
 import name.giacomofurlan.compassfinder.NeedleOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -36,7 +38,8 @@ public class MouseMixin {
 
     @Inject(method = "onMouseScroll", cancellable = true, at = @At(value = "FIELD"))
     private void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
         if (player == null) {
             return;
         }
@@ -44,14 +47,17 @@ public class MouseMixin {
         ItemStack currentItem = player.getInventory().getMainHandStack();
         Item compass = currentItem.getItem();
 
-        if (compass.getTranslationKey().equals(COMPASS_TR_KEY) && CompassFinder.isCtrlDown()) {
+        if (compass.getTranslationKey().equals(COMPASS_TR_KEY) && Screen.hasControlDown()) {
             int index = Math.floorMod(
                 Math.round(needleOptions.indexOf(CompassFinder.getNeedleOption()) + Math.floor(vertical) * -1),
                 numOptions -1
             );
 
             NeedleOption nextOption = needleOptions.get(index);
-            player.sendMessage(Text.literal(String.format("Compass - pointing to: %s", nextOption.label)));
+            player.sendMessage(Text.literal(String.format(
+                "Compass - pointing to: %s",
+                nextOption.translationKey != null ? I18n.translate(nextOption.translationKey) : nextOption.label
+            )));
             CompassFinder.setNeedleOption(nextOption);
             CompassFinder.searchAndSetCompassNbt(currentItem);
 

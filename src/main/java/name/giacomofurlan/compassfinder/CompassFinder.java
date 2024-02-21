@@ -11,13 +11,17 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.CompassItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -28,14 +32,12 @@ public class CompassFinder implements ModInitializer {
 
 	public static final int SEARCH_RADIUS = 20;
 
-	private static Boolean ctrlState;
 	private static NeedleOption needleOption;
 
 	private static BlockPos needlePointingPos;
 
 	@Override
 	public void onInitialize() {
-		ctrlState = false;
 		needleOption = NeedleOption.SPAWN_POINT;
 	}
 
@@ -89,10 +91,10 @@ public class CompassFinder implements ModInitializer {
 		BlockPos nearestPos = getNearestBlockPos(needleOption.blocks);
 		LOGGER.info("[" + needleOption.label + "] found pos: " + (nearestPos == null ? "NULL" : nearestPos.toString()));
 
-		setCompassNbt(stack, getNearestBlockPos(needleOption.blocks));
+		setCompassNbt(stack, getNearestBlockPos(needleOption.blocks), needleOption.translationKey);
 	}
 
-	public static void setCompassNbt(ItemStack stack, BlockPos nearestPos) {
+	public static void setCompassNbt(ItemStack stack, BlockPos nearestPos, String compassSpecializationTranslationKey) {
 		if (needleOption == NeedleOption.SPAWN_POINT) {
 			return;
 		}
@@ -112,6 +114,7 @@ public class CompassFinder implements ModInitializer {
 			nbt.putBoolean(CompassItem.LODESTONE_TRACKED_KEY, false);
 			nbt.remove(CompassItem.LODESTONE_POS_KEY);
 			nbt.remove(CompassItem.LODESTONE_DIMENSION_KEY);
+			stack.removeCustomName();
 		} else {
 			nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(nearestPos));
 			nbt.putBoolean(CompassItem.LODESTONE_TRACKED_KEY, true);
@@ -119,15 +122,11 @@ public class CompassFinder implements ModInitializer {
 				.resultOrPartial(LOGGER::error)
 				.ifPresent(nbtElement -> nbt.put(CompassItem.LODESTONE_DIMENSION_KEY, (NbtElement)nbtElement)
 			);
+			LOGGER.info(stack.getItem().getTranslationKey());
+			stack.setCustomName(
+				Text.of(I18n.translate(stack.getItem().getTranslationKey()) + " (" + I18n.translate(compassSpecializationTranslationKey) + ")")
+			);
 		}
-	}
-
-	public static Boolean isCtrlDown() {
-		return ctrlState;
-	}
-
-	public static void setCtrlState(Boolean ctrlState) {
-		CompassFinder.ctrlState = ctrlState;
 	}
 
 	public static NeedleOption getNeedleOption() {

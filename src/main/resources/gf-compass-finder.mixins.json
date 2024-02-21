@@ -7,7 +7,6 @@
 		"BlockMixin",
 		"ClientPlayerEntityMixin",
 		"CompassMixin",
-		"KeyboardMixin",
 		"MouseMixin"
 	],
 	"injectors": {
