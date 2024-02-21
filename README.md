@@ -17,4 +17,4 @@ The compass will now be able to search for:
 
 ## How to use it
 
-`Ctrl / Cmd` + `scroll wheel up/down` while using the compass in the main hand. It will rotate between spawn mode (default) and ore searching (selected ore).
+[`Ctrl` / `Cmd`]  + [`Scroll UP` / `Scroll DOWN` / `Arrow UP` / `Arrow DOWN`] while using the compass in the main hand. It will rotate between spawn mode (default) and ore searching (selected ore).
