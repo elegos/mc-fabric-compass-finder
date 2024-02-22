@@ -41,7 +41,7 @@ public class CompassManager {
     }
 
     public static void updateCompassPos(ClientPlayerEntity player, NeedleOption ore, BlockPos pos, ItemStack stack) {
-        if (player == null || pos == null) {
+        if (player == null) {
             return;
         }
 
@@ -51,7 +51,11 @@ public class CompassManager {
         if (stack != null) {
             NbtCompound nbt = stack != null ? stack.getOrCreateNbt() : null;
 
-            nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(pos));
+            if (pos != null) {
+                nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(pos));
+            } else {
+                nbt.remove(CompassItem.LODESTONE_POS_KEY);
+            }
             instanceNbt.ifPresent(nbtElement -> nbt.put(CompassItem.LODESTONE_DIMENSION_KEY, (NbtElement)nbtElement));
 
             return;
@@ -64,7 +68,11 @@ public class CompassManager {
             if (nbt == null || !nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY) || nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY) != ore.translationKey) {
                 continue;
             }
-            nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(pos));
+            if (pos != null) {
+                nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(pos));
+            } else {
+                nbt.remove(CompassItem.LODESTONE_POS_KEY);
+            }
             instanceNbt.ifPresent(nbtElement -> nbt.put(CompassItem.LODESTONE_DIMENSION_KEY, (NbtElement)nbtElement));
         }
     }

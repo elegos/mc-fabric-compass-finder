@@ -24,7 +24,7 @@ public class InventoryHelper {
             ItemStack stack = inventory.getStack(slot);
             NbtCompound nbt = stack.getNbt();
             if (nbt != null && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)) {
-                String translationKey = nbt.getString((CompassFinder.MODDED_COMPASS_ORE_KEY));
+                String translationKey = nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY);
                 NeedleOption option = NeedleOption.fromTranslationKey(translationKey);
                 BlockPos pos = nearestPos.getOrDefault(translationKey, null);
                 if (pos == null && option != null) {
