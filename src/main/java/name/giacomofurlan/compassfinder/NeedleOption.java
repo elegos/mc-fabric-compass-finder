@@ -22,6 +22,20 @@ public enum NeedleOption {
     public final ArrayList<Block> blocks;
     public final String translationKey;
 
+    public static NeedleOption fromTranslationKey(String key) {
+        for (NeedleOption option : NeedleOption.values()) {
+            if (option.translationKey == null) {
+                continue;
+            }
+
+            if (option.translationKey.equals(key)) {
+                return option;
+            }
+        }
+
+        return null;
+    }
+
     private NeedleOption(String label, ArrayList<Block> blocks) {
         this.label = label;
         this.blocks = blocks;

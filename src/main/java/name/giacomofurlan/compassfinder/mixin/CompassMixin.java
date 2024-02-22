@@ -6,14 +6,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import name.giacomofurlan.compassfinder.CompassFinder;
-import name.giacomofurlan.compassfinder.NeedleOption;
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 
 @Mixin(CompassItem.class)
 public class CompassMixin {
     @Inject(method = "hasLodestone", cancellable = true, at = @At(value = "RETURN"))
     private static void hasLodestone(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(CompassFinder.getNeedleOption() != NeedleOption.SPAWN_POINT);
+        NbtCompound nbt = stack.getNbt();
+        if (nbt != null && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)) {
+            cir.setReturnValue(true);
+        }
     }
 }

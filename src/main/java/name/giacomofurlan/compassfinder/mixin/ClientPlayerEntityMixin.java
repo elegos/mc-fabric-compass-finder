@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import name.giacomofurlan.compassfinder.CompassFinder;
 import name.giacomofurlan.compassfinder.InventoryHelper;
-import name.giacomofurlan.compassfinder.NeedleOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -18,10 +17,6 @@ public class ClientPlayerEntityMixin {
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void tick(CallbackInfo ci) {
-        if (CompassFinder.getNeedleOption() == NeedleOption.SPAWN_POINT) {
-            return;
-        }
-
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         BlockPos currentPos = player.getBlockPos();
 
