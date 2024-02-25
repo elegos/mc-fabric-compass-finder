@@ -14,6 +14,8 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class InventoryHelper {
@@ -44,7 +46,8 @@ public class InventoryHelper {
                 && nbt.contains(CompassItem.LODESTONE_POS_KEY)
                 && nbt.getString(CompassItem.LODESTONE_DIMENSION_KEY).equals(instanceNbt.get().asString())
             ) {
-                stackCount = (int) NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY)).getSquaredDistance(player.getPos());
+                Vec3d playerPos = player.getPos();
+                stackCount = (int) NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY)).getManhattanDistance(new Vec3i((int) playerPos.getX(), (int) playerPos.getY(), (int) playerPos.getZ()));
             }
 
             stack.setCount(stackCount > 0 ? stackCount : 1);
