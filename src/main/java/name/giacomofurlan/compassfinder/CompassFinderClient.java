@@ -23,7 +23,7 @@ public class CompassFinderClient implements ClientModInitializer {
         });
 
         HudRenderCallback.EVENT.register((DrawContext drawContext, float tickDelta) -> {
-            onHudRenderCallback(null, 0);
+            onHudRenderCallback(drawContext, tickDelta);
         });
     }
 
@@ -47,6 +47,6 @@ public class CompassFinderClient implements ClientModInitializer {
     }
 
     public static void onHudRenderCallback(DrawContext drawContext, float tickDelta) {
-        InventoryHelper.updateHotbarDistances(drawContext, tickDelta);
+        InventoryHelper.updateHotbarDistances();
     }
 }
