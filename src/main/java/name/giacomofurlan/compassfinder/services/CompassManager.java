@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CompassManager {
-    private static final String COMPASS_TR_KEY = "item.minecraft.compass";
+    public static final String COMPASS_TR_KEY = "item.minecraft.compass";
     private static final ArrayList<NeedleOption> needleOptions = new ArrayList<>(){{
         add(NeedleOption.SPAWN_POINT);
         add(NeedleOption.ORE_COAL);

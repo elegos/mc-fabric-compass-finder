@@ -1,16 +1,56 @@
 package name.giacomofurlan.compassfinder;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import name.giacomofurlan.compassfinder.services.CompassManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class InventoryHelper {
+    public static void updateHotbarDistances() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        Optional<NbtElement> instanceNbt = World.CODEC.encodeStart(NbtOps.INSTANCE, player.getWorld().getRegistryKey())
+            .resultOrPartial(CompassFinder.LOGGER::error);
+
+        if (player == null || instanceNbt.isEmpty()) {
+            return;
+        }
+
+        PlayerInventory inventory = player.getInventory();
+        for (int slot = 0; slot < PlayerInventory.getHotbarSize(); slot++) {
+            ItemStack stack = inventory.getStack(slot);
+            NbtCompound nbt = stack.getNbt();
+
+            if (!stack.getItem().getTranslationKey().equals(CompassManager.COMPASS_TR_KEY)) {
+                continue;
+            }
+
+            Integer stackCount = 1;
+
+            if (
+                nbt != null
+                && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)
+                && nbt.contains(CompassItem.LODESTONE_POS_KEY)
+                && nbt.getString(CompassItem.LODESTONE_DIMENSION_KEY).equals(instanceNbt.get().asString())
+            ) {
+                stackCount = (int) NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY)).getSquaredDistance(player.getPos());
+            }
+
+            stack.setCount(stackCount > 0 ? stackCount : 1);
+        }
+    }
+
     public static void updateCompasses() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
