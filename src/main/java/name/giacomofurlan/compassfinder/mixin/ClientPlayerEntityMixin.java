@@ -17,7 +17,8 @@ public class ClientPlayerEntityMixin {
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void tick(CallbackInfo ci) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
         BlockPos currentPos = player.getBlockPos();
 
         if (playerPos != null && currentPos.getSquaredDistance(playerPos) < CompassFinder.SEARCH_RADIUS) {

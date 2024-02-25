@@ -12,7 +12,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class InventoryHelper {
     public static void updateCompasses() {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
         if (player == null) {
             return;
         }

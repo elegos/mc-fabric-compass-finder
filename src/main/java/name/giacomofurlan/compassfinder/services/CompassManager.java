@@ -53,10 +53,10 @@ public class CompassManager {
 
             if (pos != null) {
                 nbt.put(CompassItem.LODESTONE_POS_KEY, NbtHelper.fromBlockPos(pos));
+                instanceNbt.ifPresent(nbtElement -> nbt.put(CompassItem.LODESTONE_DIMENSION_KEY, (NbtElement)nbtElement));
             } else {
                 nbt.remove(CompassItem.LODESTONE_POS_KEY);
             }
-            instanceNbt.ifPresent(nbtElement -> nbt.put(CompassItem.LODESTONE_DIMENSION_KEY, (NbtElement)nbtElement));
 
             return;
         }
@@ -84,7 +84,7 @@ public class CompassManager {
         NbtCompound nbt = stack.getOrCreateNbt();
 
         if (ore.equals(NeedleOption.SPAWN_POINT)) {
-            nbt.putBoolean(CompassItem.LODESTONE_TRACKED_KEY, false);
+            nbt.remove(CompassItem.LODESTONE_TRACKED_KEY);
             nbt.remove(CompassItem.LODESTONE_POS_KEY);
             nbt.remove(CompassItem.LODESTONE_DIMENSION_KEY);
 
@@ -118,8 +118,8 @@ public class CompassManager {
             return false;
         }
 
-        NbtCompound stackNbt = currentStack.getOrCreateNbt();
-        NeedleOption currentOption = stackNbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)
+        NbtCompound stackNbt = currentStack.getNbt();
+        NeedleOption currentOption = stackNbt != null && stackNbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)
             ? NeedleOption.fromTranslationKey(stackNbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY))
             : NeedleOption.SPAWN_POINT;
 
