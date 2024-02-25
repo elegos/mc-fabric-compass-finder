@@ -38,7 +38,7 @@ public class CompassFinderClient implements ClientModInitializer {
                 ? NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY))
                 : null;
             
-            if (moddedCompass && lodestoneBlockPos.equals(pos)) {
+            if (moddedCompass && lodestoneBlockPos != null && lodestoneBlockPos.equals(pos)) {
                 InventoryHelper.updateCompasses();
 
                 break;
