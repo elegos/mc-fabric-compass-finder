@@ -24,7 +24,7 @@ public class LodestoneRegisterCommand {
             literal("compassfinder")
                 .then(literal("lodestone")
                     .then(argument("x", IntegerArgumentType.integer())
-                    .then(argument("y", IntegerArgumentType.integer())
+                    .then(argument("z", IntegerArgumentType.integer())
                     .executes(LodestoneRegisterCommand::exec)
                 )))
         );
@@ -34,7 +34,7 @@ public class LodestoneRegisterCommand {
             literal("compassfinder")
                 .then(literal("ls")
                     .then(argument("x", IntegerArgumentType.integer())
-                    .then(argument("y", IntegerArgumentType.integer())
+                    .then(argument("z", IntegerArgumentType.integer())
                     .executes(LodestoneRegisterCommand::exec)
                 )))
         );
@@ -55,12 +55,12 @@ public class LodestoneRegisterCommand {
         }
 
         Integer x = IntegerArgumentType.getInteger(context, "x");
-        Integer y = IntegerArgumentType.getInteger(context, "y");
+        Integer z = IntegerArgumentType.getInteger(context, "z");
 
         CompassManager.setCompassOre(currentStack, NeedleOption.LODESTONE_MODE);
-        CompassManager.updateCompassPos(player, NeedleOption.LODESTONE_MODE, BlockPos.ofFloored((double) x, (double) y, 0f), currentStack);
+        CompassManager.updateCompassPos(player, NeedleOption.LODESTONE_MODE, BlockPos.ofFloored(x, 0f, z), currentStack);
 
-        context.getSource().sendFeedback(Text.literal("Compass pointing to [%s, %s]".formatted(x, y)));
+        context.getSource().sendFeedback(Text.literal("Compass pointing to [%s, %s]".formatted(x, z)));
 
         return 1;
     }

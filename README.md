@@ -21,4 +21,4 @@ The compass will now be able to search for:
 
 ### Commands
 
-- `/compassfinder lodestone [int:X] [int:Y]` point to an arbitrary 2d coordinate in the current dimension. `/compassfinder ls [int:X] [int:Y]` is an alias
+- `/compassfinder lodestone [int:X] [int:Z]` point to an arbitrary 2d coordinate in the current dimension. `/compassfinder ls [int:X] [int:Y]` is an alias
