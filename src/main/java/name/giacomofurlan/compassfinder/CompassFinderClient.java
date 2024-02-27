@@ -1,12 +1,18 @@
 package name.giacomofurlan.compassfinder;
 
+import com.mojang.brigadier.CommandDispatcher;
+
+import name.giacomofurlan.compassfinder.commands.LodestoneRegisterCommand;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
@@ -14,7 +20,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 
-public class CompassFinderClient implements ClientModInitializer {
+public class CompassFinderClient implements ClientModInitializer, ClientCommandRegistrationCallback {
 
     @Override
     public void onInitializeClient() {
@@ -25,6 +31,14 @@ public class CompassFinderClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((DrawContext drawContext, float tickDelta) -> {
             onHudRenderCallback(drawContext, tickDelta);
         });
+
+        ClientCommandRegistrationCallback.EVENT.register(this);
+    }
+
+    @Override
+    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
+            CommandRegistryAccess registryAccess) {
+        LodestoneRegisterCommand.register(dispatcher);
     }
 
     public void onClientPlayerBlockBreakEventsCallback(ClientWorld world, ClientPlayerEntity player, BlockPos pos, BlockState state) {

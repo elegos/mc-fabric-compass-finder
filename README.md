@@ -18,3 +18,7 @@ The compass will now be able to search for:
 ## How to use it
 
 [`Ctrl` / `Cmd`]  + [`Scroll UP` / `Scroll DOWN` / `Arrow UP` / `Arrow DOWN`] while using the compass in the main hand. It will rotate between spawn mode (default) and ore searching (selected ore).
+
+### Commands
+
+- `/compassfinder lodestone [int:X] [int:Y]` point to an arbitrary 2d coordinate in the current dimension. `/compassfinder ls [int:X] [int:Y]` is an alias

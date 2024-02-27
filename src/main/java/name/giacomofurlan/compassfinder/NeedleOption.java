@@ -16,7 +16,8 @@ public enum NeedleOption {
     ORE_DIAMOND("Diamond", new ArrayList<>(){{ add(Blocks.DIAMOND_ORE); add(Blocks.DEEPSLATE_DIAMOND_ORE); }}, "block.minecraft.diamond_ore"),
     ORE_EMERALD("Emerald", new ArrayList<>(){{ add(Blocks.EMERALD_ORE); add(Blocks.DEEPSLATE_EMERALD_ORE); }}, "block.minecraft.emerald_ore"),
     ORE_NETHER_QUARTZ("Nether Quartz", new ArrayList<>(){{ add(Blocks.NETHER_QUARTZ_ORE); }}, "block.minecraft.nether_quartz_ore"),
-    ORE_ANCIENT_DEBRIS("Ancient Debris", new ArrayList<>(){{ add(Blocks.ANCIENT_DEBRIS); }}, "block.minecraft.ancient_debris");
+    ORE_ANCIENT_DEBRIS("Ancient Debris", new ArrayList<>(){{ add(Blocks.ANCIENT_DEBRIS); }}, "block.minecraft.ancient_debris"),
+    LODESTONE_MODE("Lodestone mode (command)", null, "item.minecraft.lodestone_compass");
 
     public final String label;
     public final ArrayList<Block> blocks;

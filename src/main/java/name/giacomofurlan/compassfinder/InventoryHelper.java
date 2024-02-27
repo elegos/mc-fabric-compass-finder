@@ -46,8 +46,14 @@ public class InventoryHelper {
                 && nbt.contains(CompassItem.LODESTONE_POS_KEY)
                 && nbt.getString(CompassItem.LODESTONE_DIMENSION_KEY).equals(instanceNbt.get().asString())
             ) {
+                BlockPos targetPos = NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY));
                 Vec3d playerPos = player.getPos();
-                stackCount = (int) NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY)).getManhattanDistance(new Vec3i((int) playerPos.getX(), (int) playerPos.getY(), (int) playerPos.getZ()));
+
+                // Lodestone mode doesn't care about height
+                if (nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY) == NeedleOption.LODESTONE_MODE.translationKey) {
+                    playerPos = new Vec3d(playerPos.getX(), targetPos.getY(), playerPos.getZ());
+                }
+                stackCount = (int) targetPos.getManhattanDistance(new Vec3i((int) playerPos.getX(), (int) playerPos.getY(), (int) playerPos.getZ()));
             }
 
             stack.setCount(stackCount > 0 ? stackCount : 1);
@@ -70,6 +76,10 @@ public class InventoryHelper {
             if (nbt != null && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)) {
                 String translationKey = nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY);
                 NeedleOption option = NeedleOption.fromTranslationKey(translationKey);
+                if (option == NeedleOption.LODESTONE_MODE) {
+                    continue;
+                }
+
                 BlockPos pos = nearestPos.getOrDefault(translationKey, null);
                 if (pos == null && option != null) {
                     pos = CompassFinder.getNearestBlockPos(option.blocks);

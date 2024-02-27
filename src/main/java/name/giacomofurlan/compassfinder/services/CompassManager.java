@@ -96,9 +96,13 @@ public class CompassManager {
 
         nbt.putBoolean(CompassItem.LODESTONE_TRACKED_KEY, true);
         nbt.putString(CompassFinder.MODDED_COMPASS_ORE_KEY, ore.translationKey);
-        stack.setCustomName(
-            Text.of(I18n.translate(stack.getItem().getTranslationKey()) + " (" + I18n.translate(ore.translationKey) + ")")
-        );
+        if (ore == NeedleOption.LODESTONE_MODE) {
+            stack.removeCustomName();
+        } else {
+            stack.setCustomName(
+                Text.of(I18n.translate(stack.getItem().getTranslationKey()) + " (" + I18n.translate(ore.translationKey) + ")")
+            );
+        }
     }
 
     /**
