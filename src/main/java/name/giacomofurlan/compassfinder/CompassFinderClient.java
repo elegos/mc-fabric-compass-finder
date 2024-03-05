@@ -3,6 +3,7 @@ package name.giacomofurlan.compassfinder;
 import com.mojang.brigadier.CommandDispatcher;
 
 import name.giacomofurlan.compassfinder.commands.LodestoneRegisterCommand;
+import name.giacomofurlan.compassfinder.services.InventoryHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -20,7 +21,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 
-public class CompassFinderClient implements ClientModInitializer, ClientCommandRegistrationCallback {
+public class CompassFinderClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
@@ -32,13 +33,11 @@ public class CompassFinderClient implements ClientModInitializer, ClientCommandR
             onHudRenderCallback(drawContext, tickDelta);
         });
 
-        ClientCommandRegistrationCallback.EVENT.register(this);
-    }
-
-    @Override
-    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher,
-            CommandRegistryAccess registryAccess) {
-        LodestoneRegisterCommand.register(dispatcher);
+        ClientCommandRegistrationCallback.EVENT.register(
+            (CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) -> {
+                LodestoneRegisterCommand.register(dispatcher);
+            }
+        );
     }
 
     public void onClientPlayerBlockBreakEventsCallback(ClientWorld world, ClientPlayerEntity player, BlockPos pos, BlockState state) {

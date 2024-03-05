@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import name.giacomofurlan.compassfinder.CompassFinder;
-import name.giacomofurlan.compassfinder.InventoryHelper;
+import name.giacomofurlan.compassfinder.services.InventoryHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;

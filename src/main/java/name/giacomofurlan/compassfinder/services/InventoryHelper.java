@@ -1,9 +1,10 @@
-package name.giacomofurlan.compassfinder;
+package name.giacomofurlan.compassfinder.services;
 
 import java.util.HashMap;
 import java.util.Optional;
 
-import name.giacomofurlan.compassfinder.services.CompassManager;
+import name.giacomofurlan.compassfinder.CompassFinder;
+import name.giacomofurlan.compassfinder.NeedleOption;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -61,6 +62,10 @@ public class InventoryHelper {
     }
 
     public static void updateCompasses() {
+        updateCompasses(null);
+    }
+
+    public static void updateCompasses(BlockPos brokenPos) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (player == null) {
@@ -69,10 +74,17 @@ public class InventoryHelper {
 
         PlayerInventory inventory = player.getInventory();
         HashMap<String, BlockPos> nearestPos = new HashMap<>();
+        CompassManager.removeNbtCache(brokenPos);
 
         for (int slot = 0; slot < inventory.size(); slot++) {
             ItemStack stack = inventory.getStack(slot);
-            NbtCompound nbt = stack.getNbt();
+            NbtCompound nbt = stack.getOrCreateNbt();
+            NbtCompound cachedNbt = CompassManager.getCachedNbt(slot + 1);
+
+            if (nbt.getSize() == 0 && cachedNbt != null) {
+                nbt.copyFrom(cachedNbt);
+            }
+            
             if (nbt != null && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)) {
                 String translationKey = nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY);
                 NeedleOption option = NeedleOption.fromTranslationKey(translationKey);

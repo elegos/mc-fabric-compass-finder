@@ -1,10 +1,12 @@
 package name.giacomofurlan.compassfinder.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import name.giacomofurlan.compassfinder.CompassFinder;
 import name.giacomofurlan.compassfinder.NeedleOption;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.resource.language.I18n;
@@ -22,6 +24,7 @@ import net.minecraft.world.World;
 
 public class CompassManager {
     public static final String COMPASS_TR_KEY = "item.minecraft.compass";
+    public static final String LODESTONE_COMPASS_TR_KEY = "item.minecraft.lodestone_compass";
     private static final ArrayList<NeedleOption> needleOptions = new ArrayList<>(){{
         add(NeedleOption.SPAWN_POINT);
         add(NeedleOption.ORE_COAL);
@@ -35,6 +38,8 @@ public class CompassManager {
         add(NeedleOption.ORE_NETHER_QUARTZ);
         add(NeedleOption.ORE_ANCIENT_DEBRIS);
     }};
+
+    protected static HashMap<Integer, NbtCompound> customNbtCache = new HashMap<>();
 
     public static void updateCompassPos(ClientPlayerEntity player, NeedleOption ore, BlockPos pos) {
         updateCompassPos(player, ore, pos, null);
@@ -83,6 +88,10 @@ public class CompassManager {
         }
         NbtCompound nbt = stack.getOrCreateNbt();
 
+        MinecraftClient client = MinecraftClient.getInstance();
+        ClientPlayerEntity player = client.player;
+        int slot = player.getInventory().getSlotWithStack(stack) + 1;
+
         if (ore.equals(NeedleOption.SPAWN_POINT)) {
             nbt.remove(CompassItem.LODESTONE_TRACKED_KEY);
             nbt.remove(CompassItem.LODESTONE_POS_KEY);
@@ -90,6 +99,8 @@ public class CompassManager {
 
             nbt.remove(CompassFinder.MODDED_COMPASS_ORE_KEY);
             stack.removeCustomName();
+
+            updateNbtCache(slot, null);
 
             return;
         }
@@ -103,6 +114,8 @@ public class CompassManager {
                 Text.of(I18n.translate(stack.getItem().getTranslationKey()) + " (" + I18n.translate(ore.translationKey) + ")")
             );
         }
+
+        CompassManager.updateNbtCache(slot, nbt);
     }
 
     /**
@@ -142,5 +155,32 @@ public class CompassManager {
         updateCompassPos(player, nextOption, CompassFinder.getNearestBlockPos(nextOption.blocks), currentStack);
 
         return true;
+    }
+
+    public static void updateNbtCache(int slot, NbtCompound nbt) {
+        if (nbt == null && customNbtCache.containsKey(slot)) {
+            customNbtCache.remove(slot);
+        }
+
+        customNbtCache.put(slot, nbt);
+    }
+
+    public static NbtCompound getCachedNbt(int slot) {
+        if (customNbtCache.containsKey(slot)) {
+            return customNbtCache.get(slot);
+        }
+
+        return null;
+    }
+
+    public static void removeNbtCache(BlockPos pos) {
+        if (pos == null) {
+            return;
+        }
+
+        customNbtCache.entrySet().removeIf(
+            entry -> entry.getValue().contains(CompassItem.LODESTONE_POS_KEY)
+                && NbtHelper.toBlockPos(entry.getValue().getCompound(CompassItem.LODESTONE_POS_KEY)).withY(0).equals(pos.withY(0))
+        );
     }
 }
