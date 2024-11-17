@@ -29,9 +29,9 @@
 		"gf-compass-finder.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.15.6",
-		"minecraft": "~1.20.4",
-		"java": ">=17",
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.3",
+		"java": ">=21",
 		"fabric-api": "*",
 		"fabric-key-binding-api-v1": "*"
 	},

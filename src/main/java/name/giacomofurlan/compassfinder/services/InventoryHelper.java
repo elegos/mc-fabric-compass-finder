@@ -5,8 +5,11 @@ import java.util.Optional;
 
 import name.giacomofurlan.compassfinder.CompassFinder;
 import name.giacomofurlan.compassfinder.NeedleOption;
+import name.giacomofurlan.compassfinder.components.CompassFinderComponentTypes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
@@ -15,6 +18,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -33,25 +37,27 @@ public class InventoryHelper {
         PlayerInventory inventory = player.getInventory();
         for (int slot = 0; slot < PlayerInventory.getHotbarSize(); slot++) {
             ItemStack stack = inventory.getStack(slot);
-            NbtCompound nbt = stack.getNbt();
 
             if (!stack.getItem().getTranslationKey().equals(CompassManager.COMPASS_TR_KEY)) {
                 continue;
             }
 
             Integer stackCount = 1;
+            LodestoneTrackerComponent ltc = stack.get(DataComponentTypes.LODESTONE_TRACKER);
+            GlobalPos lodestoneGlobalPos = ltc != null && ltc.target().isPresent() ? ltc.target().get() : null;
+            String oreType = stack.get(CompassFinderComponentTypes.ORE_TYPE);
 
             if (
-                nbt != null
-                && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)
-                && nbt.contains(CompassItem.LODESTONE_POS_KEY)
-                && nbt.getString(CompassItem.LODESTONE_DIMENSION_KEY).equals(instanceNbt.get().asString())
+                oreType != null
+                && ltc != null
+                && lodestoneGlobalPos != null
+                && lodestoneGlobalPos.dimension().equals(player.getWorld().getRegistryKey())
             ) {
-                BlockPos targetPos = NbtHelper.toBlockPos(nbt.getCompound(CompassItem.LODESTONE_POS_KEY));
+                BlockPos targetPos = lodestoneGlobalPos.pos();
                 Vec3d playerPos = player.getPos();
 
                 // Lodestone mode doesn't care about height
-                if (nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY) == NeedleOption.LODESTONE_MODE.translationKey) {
+                if (oreType == NeedleOption.LODESTONE_MODE.translationKey) {
                     playerPos = new Vec3d(playerPos.getX(), targetPos.getY(), playerPos.getZ());
                 }
                 stackCount = (int) targetPos.getManhattanDistance(new Vec3i((int) playerPos.getX(), (int) playerPos.getY(), (int) playerPos.getZ()));

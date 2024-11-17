@@ -17,7 +17,9 @@ import net.minecraft.util.math.BlockPos;
 public class CompassFinder implements ModInitializer {
 	public static final String MOD_ID = "gf-compass-finder";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final String MODDED_COMPASS_ORE_KEY = "CompassFinderModdedOre";
+
+	@Deprecated
+	public static final String MODDED_COMPASS_ORE_KEY = "CompassFinderModdedOre"; // Use CompassFinderComponentTypes.ORE_TYPE instead
 
 	public static final int SEARCH_RADIUS = 20;
 
