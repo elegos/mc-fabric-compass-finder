@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import name.giacomofurlan.compassfinder.components.CompassFinderComponentTypes;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -18,13 +19,11 @@ public class CompassFinder implements ModInitializer {
 	public static final String MOD_ID = "gf-compass-finder";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	@Deprecated
-	public static final String MODDED_COMPASS_ORE_KEY = "CompassFinderModdedOre"; // Use CompassFinderComponentTypes.ORE_TYPE instead
-
 	public static final int SEARCH_RADIUS = 20;
 
 	@Override
 	public void onInitialize() {
+		CompassFinderComponentTypes.registerDataComponentTypes();
 	}
 
 	public static BlockPos getNearestBlockPos(List<Block> blockTypes) {

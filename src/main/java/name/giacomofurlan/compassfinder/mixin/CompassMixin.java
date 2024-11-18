@@ -11,9 +11,9 @@ import net.minecraft.item.ItemStack;
 
 @Mixin(CompassItem.class)
 public class CompassMixin {
-    @Inject(method = "hasLodestone", cancellable = true, at = @At(value = "RETURN"))
+    @Inject(method = "hasGlint", cancellable = true, at = @At(value = "RETURN"))
     private static void hasLodestone(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.contains(CompassFinderComponentTypes.ORE_TYPE)) {
+        if (cir != null && stack.contains(CompassFinderComponentTypes.ORE_TYPE)) {
             cir.setReturnValue(true);
         }
     }
