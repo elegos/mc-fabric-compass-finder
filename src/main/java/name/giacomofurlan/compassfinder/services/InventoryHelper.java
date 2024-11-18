@@ -42,7 +42,7 @@ public class InventoryHelper {
             Integer stackCount = 1;
             LodestoneTrackerComponent ltc = stack.get(DataComponentTypes.LODESTONE_TRACKER);
             GlobalPos lodestoneGlobalPos = ltc != null && ltc.target().isPresent() ? ltc.target().get() : null;
-            String oreType = stack.get(CompassFinderComponentTypes.ORE_TYPE);
+            String oreType = stack.contains(CompassFinderComponentTypes.ORE_TYPE) ? stack.get(CompassFinderComponentTypes.ORE_TYPE) : null;
 
             if (
                 oreType != null
@@ -80,7 +80,7 @@ public class InventoryHelper {
 
         for (int slot = 0; slot < inventory.size(); slot++) {
             ItemStack stack = inventory.getStack(slot);
-            String oreType = stack.get(CompassFinderComponentTypes.ORE_TYPE);
+            String oreType = stack.contains(CompassFinderComponentTypes.ORE_TYPE) ? stack.get(CompassFinderComponentTypes.ORE_TYPE) : null;
 
             if (oreType != null && !oreType.equals("")) {
                 NeedleOption option = NeedleOption.fromTranslationKey(oreType);
