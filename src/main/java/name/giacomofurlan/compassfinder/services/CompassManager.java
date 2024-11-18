@@ -46,7 +46,6 @@ public class CompassManager {
 
         if (stack != null) {
             if (pos == null) {
-                stack.remove(CompassFinderComponentTypes.ORE_TYPE);
                 stack.remove(DataComponentTypes.LODESTONE_TRACKER);
             } else {
                 stack.set(
@@ -125,10 +124,8 @@ public class CompassManager {
             ? NeedleOption.fromTranslationKey(currentStack.get(CompassFinderComponentTypes.ORE_TYPE))
             : NeedleOption.SPAWN_POINT;
 
-        int index = Math.floorMod(
-            Math.round(needleOptions.indexOf(currentOption) + direction),
-            numOptions
-        );
+        int raw_index = needleOptions.indexOf(currentOption) + direction;
+        int index = raw_index < 0 ? numOptions + raw_index : raw_index % numOptions;
 
         NeedleOption nextOption = needleOptions.get(index);
         player.sendMessage(Text.literal(String.format(
