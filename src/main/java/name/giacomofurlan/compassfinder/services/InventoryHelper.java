@@ -11,11 +11,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.CompassItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
@@ -84,24 +81,18 @@ public class InventoryHelper {
 
         for (int slot = 0; slot < inventory.size(); slot++) {
             ItemStack stack = inventory.getStack(slot);
-            NbtCompound nbt = stack.getOrCreateNbt();
-            NbtCompound cachedNbt = CompassManager.getCachedNbt(slot + 1);
+            String oreType = stack.get(CompassFinderComponentTypes.ORE_TYPE);
 
-            if (nbt.getSize() == 0 && cachedNbt != null) {
-                nbt.copyFrom(cachedNbt);
-            }
-            
-            if (nbt != null && nbt.contains(CompassFinder.MODDED_COMPASS_ORE_KEY)) {
-                String translationKey = nbt.getString(CompassFinder.MODDED_COMPASS_ORE_KEY);
-                NeedleOption option = NeedleOption.fromTranslationKey(translationKey);
+            if (oreType != null && !oreType.equals("")) {
+                NeedleOption option = NeedleOption.fromTranslationKey(oreType);
                 if (option == NeedleOption.LODESTONE_MODE) {
                     continue;
                 }
 
-                BlockPos pos = nearestPos.getOrDefault(translationKey, null);
+                BlockPos pos = nearestPos.getOrDefault(oreType, null);
                 if (pos == null && option != null) {
                     pos = CompassFinder.getNearestBlockPos(option.blocks);
-                    nearestPos.put(translationKey, pos);
+                    nearestPos.put(oreType, pos);
                 }
                 CompassManager.updateCompassPos(player, option, pos, stack);
             }
