@@ -77,7 +77,6 @@ public class InventoryHelper {
 
         PlayerInventory inventory = player.getInventory();
         HashMap<String, BlockPos> nearestPos = new HashMap<>();
-        CompassManager.removeNbtCache(brokenPos);
 
         for (int slot = 0; slot < inventory.size(); slot++) {
             ItemStack stack = inventory.getStack(slot);
