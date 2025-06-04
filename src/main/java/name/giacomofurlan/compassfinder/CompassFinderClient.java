@@ -10,12 +10,11 @@ import name.giacomofurlan.compassfinder.services.InventoryHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.component.DataComponentTypes;
@@ -33,12 +32,7 @@ public class CompassFinderClient implements ClientModInitializer {
             this.onClientPlayerBlockBreakEventsCallback(world, player, pos, state);
         });
 
-        HudRenderCallback.EVENT.register(new HudRenderCallback() {
-            @Override
-            public void onHudRender(DrawContext drawContext, RenderTickCounter tickCounter) {
-                onHudRenderCallback(drawContext, tickCounter);
-            }
-        });
+        HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> onHudRenderCallback(layeredDrawer));
 
         ClientCommandRegistrationCallback.EVENT.register(
             (CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) -> {
@@ -67,7 +61,7 @@ public class CompassFinderClient implements ClientModInitializer {
         }
     }
 
-    public static void onHudRenderCallback(DrawContext drawContext, RenderTickCounter tickCounter) {
+    public static void onHudRenderCallback(LayeredDrawerWrapper layeredDrawer) {
         InventoryHelper.updateHotbarDistances();
     }
 }

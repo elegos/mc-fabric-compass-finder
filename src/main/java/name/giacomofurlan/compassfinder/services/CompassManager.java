@@ -113,7 +113,7 @@ public class CompassManager {
         Integer direction = listDirectionForward ? 1 : -1;
         Integer numOptions = needleOptions.size();
 
-        ItemStack currentStack = player.getInventory().getMainHandStack();
+        ItemStack currentStack = player.getMainHandStack();
         Item compass = currentStack.getItem();
 
         if (!compass.getTranslationKey().equals(COMPASS_TR_KEY) || !Screen.hasControlDown()) {

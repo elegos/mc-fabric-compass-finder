@@ -47,7 +47,7 @@ public class LodestoneRegisterCommand {
             return 0;
         }
 
-        ItemStack currentStack = player.getInventory().getMainHandStack();
+        ItemStack currentStack = player.getMainHandStack();
         Item compass = currentStack.getItem();
 
         if (!compass.getTranslationKey().equals(CompassManager.COMPASS_TR_KEY)) {

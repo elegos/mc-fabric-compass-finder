@@ -24,6 +24,10 @@ public class InventoryHelper {
     public static void updateHotbarDistances() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
+        if (player == null) {
+            return;
+        }
+
         Optional<NbtElement> instanceNbt = World.CODEC.encodeStart(NbtOps.INSTANCE, player.getWorld().getRegistryKey())
             .resultOrPartial(CompassFinder.LOGGER::error);
 
