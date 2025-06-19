@@ -10,8 +10,7 @@ import name.giacomofurlan.compassfinder.services.InventoryHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.event.client.player.ClientPlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -21,6 +20,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LodestoneTrackerComponent;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.GlobalPos;
 
@@ -32,7 +32,9 @@ public class CompassFinderClient implements ClientModInitializer {
             this.onClientPlayerBlockBreakEventsCallback(world, player, pos, state);
         });
 
-        HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> onHudRenderCallback(layeredDrawer));
+        HudElementRegistry.addLast(Identifier.of("name.giacomofurlan", "compass_finder"), (context, tickCounter) -> {
+            InventoryHelper.updateHotbarDistances();
+        });
 
         ClientCommandRegistrationCallback.EVENT.register(
             (CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) -> {
@@ -61,7 +63,7 @@ public class CompassFinderClient implements ClientModInitializer {
         }
     }
 
-    public static void onHudRenderCallback(LayeredDrawerWrapper layeredDrawer) {
-        InventoryHelper.updateHotbarDistances();
-    }
+    // public static void onHudRenderCallback(LayeredDrawerWrapper layeredDrawer) {
+    //     InventoryHelper.updateHotbarDistances();
+    // }
 }
